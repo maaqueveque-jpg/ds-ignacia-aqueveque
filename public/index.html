@@ -1,4 +1,1191 @@
 <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Observatorio INE — Mobile Design System</title>
+  
+  <!-- Tipografías Oficiales -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900;1,6..12,400&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       01. TOKENS Y VARIABLES DE DISEÑO
+       ========================================================================== */
+    :root {
+      --color-crema: #F7F4EE;
+      --color-beige: #E8DED0;
+      --color-cafe-oscuro: #49372B;
+      --color-cafe-medio: #806653;
+      --color-cafe-suave: #B09A82;
+      --color-terracota: #A87559;
+
+      --col-atomos: #49372B;
+      --col-moleculas: #75513A;
+      --col-organismos: #8A5636;
+      --col-plantillas: #9F653B;
+      --col-paginas: #B86C38;
+      --col-card-bg: #F3EBE0;
+
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Nunito Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-pill: 9999px;
+      --shadow-soft: 0 4px 18px rgba(73, 55, 43, 0.08);
+      --shadow-float: 0 10px 30px rgba(73, 55, 43, 0.16);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--color-crema);
+      color: var(--color-cafe-oscuro);
+      font-family: var(--font-sans);
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      padding-bottom: 80px; /* Espacio para barra de navegación móvil */
+    }
+
+    /* ==========================================================================
+       02. BARRA DE NAVEGACIÓN SUPERIOR MÓVIL
+       ========================================================================== */
+    .mobile-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(247, 244, 238, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(73, 55, 43, 0.12);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-title {
+      font-weight: 900;
+      font-size: 0.95rem;
+      color: var(--color-cafe-oscuro);
+      letter-spacing: -0.3px;
+    }
+    .brand-title span {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--color-terracota);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .menu-trigger-btn {
+      background: var(--color-cafe-oscuro);
+      color: #FFFFFF;
+      border: none;
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.75rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       03. LANDING PAGE EN FORMATO MÓVIL (COVER ADAPTADO)
+       ========================================================================== */
+    .mobile-landing {
+      padding: 1.25rem 1rem 1.75rem 1rem;
+    }
+
+    .landing-badge {
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--color-terracota);
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    .landing-hero-title {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--color-cafe-oscuro);
+      line-height: 1.2;
+      letter-spacing: -0.4px;
+      margin-bottom: 0.5rem;
+    }
+
+    .landing-hero-desc {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--color-cafe-medio);
+      line-height: 1.35;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Pestañas rápidas horizontales (Stepper) */
+    .level-pills-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 0.75rem;
+    }
+    .level-pills-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .level-pill {
+      flex-shrink: 0;
+      padding: 0.4rem 0.85rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.72rem;
+      font-weight: 800;
+      background: var(--color-beige);
+      color: var(--color-cafe-oscuro);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .level-pill.active {
+      background: var(--color-cafe-oscuro);
+      color: #FFFFFF;
+    }
+
+    /* Contenedor de Carrusel Táctil (Swipe Horizontal) */
+    .mobile-swipe-wrapper {
+      position: relative;
+      margin: 0 -1rem; /* Borde a borde para swipe natural */
+      padding: 0 1rem;
+    }
+
+    .mobile-swipe-track {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 1rem;
+      scrollbar-width: none;
+    }
+    .mobile-swipe-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Tarjetas del carrusel (Ocupan el 85% de la pantalla para ver el borde de la siguiente) */
+    .mobile-atomic-card {
+      flex: 0 0 86%;
+      max-width: 340px;
+      scroll-snap-align: center;
+      background: var(--col-card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(73, 55, 43, 0.12);
+      padding: 1.25rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 480px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .card-top-header {
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-md);
+      color: #FFFFFF;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .card-top-header h3 {
+      font-size: 0.9rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      line-height: 1.1;
+    }
+    .card-top-header span {
+      font-size: 0.68rem;
+      font-weight: 600;
+      opacity: 0.9;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .card-subheading {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--color-cafe-medio);
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+
+    /* Indicador de puntos (dots) para móvil */
+    .mobile-dots-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin: 0.5rem 0 1.25rem 0;
+    }
+    .mobile-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--color-cafe-suave);
+      transition: all 0.25s ease;
+    }
+    .mobile-dot.active {
+      width: 22px;
+      border-radius: 4px;
+      background: var(--color-terracota);
+    }
+
+    /* Detalles interiores de Átomos */
+    .swatches-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 1rem;
+    }
+    .swatch-box {
+      flex: 1;
+      height: 38px;
+      border-radius: 6px;
+    }
+
+    .atom-number {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--color-cafe-oscuro);
+      line-height: 1;
+    }
+    .atom-number-sub {
+      font-size: 0.68rem;
+      color: var(--color-cafe-medio);
+      margin-top: 3px;
+      margin-bottom: 1rem;
+    }
+
+    .mobile-btn-demo {
+      background: var(--color-terracota);
+      color: #fff;
+      border: none;
+      padding: 0.65rem;
+      border-radius: var(--radius-md);
+      font-size: 0.8rem;
+      font-weight: 800;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 1rem;
+      cursor: pointer;
+    }
+
+    /* Detalles interiores de Moléculas */
+    .white-sheet {
+      background: #FFFFFF;
+      border-radius: var(--radius-md);
+      padding: 0.85rem;
+      margin-bottom: 0.85rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+
+    .sheet-title {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--color-cafe-oscuro);
+    }
+    .sheet-kpi {
+      font-size: 1.8rem;
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--color-cafe-oscuro);
+    }
+    .sheet-delta {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--color-terracota);
+    }
+
+    .sheet-select {
+      background: #FFFFFF;
+      border: 1px solid rgba(73, 55, 43, 0.2);
+      border-radius: var(--radius-md);
+      padding: 0.55rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.85rem;
+    }
+
+    .gradient-bar {
+      height: 9px;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(to right, #F3DCBA, #BD7850, #49372B);
+      margin: 4px 0;
+    }
+
+    /* Detalles de Organismos */
+    .bar-chart-track {
+      height: 12px;
+      background: var(--color-beige);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      margin: 8px 0;
+    }
+    .bar-chart-fill {
+      width: 78%;
+      height: 100%;
+      background: linear-gradient(to right, #BD7850, #733D21);
+      border-radius: var(--radius-pill);
+    }
+
+    .chile-heatmap-mobile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 8px 0;
+    }
+    .chile-vertical-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: center;
+      width: 26px;
+    }
+    .c-slice {
+      height: 4px;
+      border-radius: 2px;
+    }
+
+    /* Teléfonos en miniatura para Plantillas y Páginas */
+    .mini-phone-frame {
+      background: #FFFFFF;
+      border: 5px solid #36281E;
+      border-radius: 24px;
+      padding: 0.65rem 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 145px;
+      margin: 0 auto 0.75rem auto;
+      box-shadow: var(--shadow-soft);
+    }
+    .dashed-box {
+      border: 1.5px dashed #D6C7B7;
+      border-radius: 5px;
+      background: #FAF7F2;
+      color: var(--color-cafe-medio);
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-align: center;
+      padding: 0.4rem 0.1rem;
+    }
+
+    .link-more-mobile {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--color-terracota);
+      text-decoration: none;
+      display: inline-block;
+      margin-top: auto;
+    }
+
+    /* Banner de aprendizaje al pie del carrusel */
+    .mobile-quote-banner {
+      background: #F3E8DB;
+      border: 1px solid rgba(73, 55, 43, 0.12);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1rem;
+      font-size: 0.78rem;
+      color: var(--color-cafe-oscuro);
+      font-weight: 700;
+      line-height: 1.4;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .mobile-quote-banner em {
+      font-style: normal;
+      color: var(--color-terracota);
+      font-weight: 900;
+    }
+
+    .main-cta-mobile {
+      background: var(--color-cafe-oscuro);
+      color: #FFFFFF;
+      text-align: center;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-decoration: none;
+      display: block;
+      box-shadow: var(--shadow-float);
+    }
+
+    /* ==========================================================================
+       04. SECCIONES DEL SISTEMA DE DISEÑO (FORMATO TELÉFONO)
+       ========================================================================== */
+    .mobile-content-area {
+      padding: 2rem 1rem;
+    }
+
+    .m-section {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(73, 55, 43, 0.12);
+      scroll-margin-top: 70px;
+    }
+
+    .m-sec-badge {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--color-terracota);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .m-sec-title {
+      font-family: var(--font-serif);
+      font-size: 1.65rem;
+      color: var(--color-cafe-oscuro);
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+
+    .m-sec-lead {
+      font-size: 0.9rem;
+      color: var(--color-cafe-medio);
+      margin-bottom: 1.25rem;
+    }
+
+    .m-card-white {
+      background: #FFFFFF;
+      border: 1px solid rgba(73, 55, 43, 0.1);
+      border-radius: var(--radius-md);
+      padding: 1.1rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .m-card-beige {
+      background: var(--color-beige);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Botones accesibles de 48px de alto */
+    .touch-btn {
+      min-height: 44px;
+      padding: 0.65rem 1.2rem;
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 800;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .touch-btn-primary { background: var(--color-cafe-oscuro); color: #fff; }
+    .touch-btn-accent { background: var(--color-terracota); color: #fff; }
+    .touch-btn-secondary { background: transparent; border: 1.5px solid var(--color-cafe-medio); color: var(--color-cafe-oscuro); }
+
+    .m-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.7rem;
+      font-weight: 800;
+    }
+    .m-badge-neutral { background: var(--color-beige); color: var(--color-cafe-oscuro); }
+    .m-badge-terracota { background: #F3E4DC; color: var(--color-terracota); }
+    .m-badge-ia { background: #ECE6DD; color: var(--color-cafe-oscuro); border: 1px solid var(--color-cafe-suave); }
+
+    .m-explainer {
+      background: var(--color-beige);
+      border-left: 4px solid var(--color-terracota);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 0.85rem 1rem;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      margin-bottom: 1rem;
+    }
+
+    /* Tabla con scroll horizontal asistido */
+    .table-scroll-wrapper {
+      position: relative;
+      margin: 1rem 0;
+    }
+    .table-scroll-hint {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--color-terracota);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .table-responsive-box {
+      overflow-x: auto;
+      border: 1px solid rgba(73, 55, 43, 0.12);
+      border-radius: var(--radius-md);
+      -webkit-overflow-scrolling: touch;
+      background: #FFFFFF;
+    }
+    .mobile-table {
+      width: 100%;
+      min-width: 440px;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+    .mobile-table th {
+      background: var(--color-beige);
+      padding: 0.65rem 0.75rem;
+      font-weight: 800;
+      text-align: left;
+    }
+    .mobile-table td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid rgba(73, 55, 43, 0.08);
+    }
+
+    /* ==========================================================================
+       05. BOTTOM SHEET / MENÚ DESLIZABLE MÓVIL (DRAWER)
+       ========================================================================== */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .drawer-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-drawer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--color-crema);
+      border-radius: 24px 24px 0 0;
+      max-height: 82vh;
+      overflow-y: auto;
+      z-index: 1001;
+      padding: 1.25rem 1.25rem 2.5rem 1.25rem;
+      transform: translateY(100%);
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.25);
+    }
+    .drawer-overlay.active .mobile-drawer {
+      transform: translateY(0);
+    }
+
+    .drawer-handle {
+      width: 40px;
+      height: 5px;
+      background: var(--color-cafe-suave);
+      border-radius: 10px;
+      margin: 0 auto 1.25rem auto;
+    }
+
+    .drawer-menu-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .drawer-menu-list a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0.8rem 1rem;
+      background: #FFFFFF;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--color-cafe-oscuro);
+      text-decoration: none;
+      border: 1px solid rgba(73, 55, 43, 0.08);
+    }
+    .drawer-menu-list a:active {
+      background: var(--color-beige);
+    }
+
+    /* Barra inferior flotante fija */
+    .mobile-bottom-bar {
+      position: fixed;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(73, 55, 43, 0.95);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-pill);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: var(--shadow-float);
+      z-index: 90;
+    }
+    .mobile-bottom-bar a {
+      color: #FFFFFF;
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       01. CABECERA FIJA SUPERIOR
+       ========================================================================== */
+  <header class="mobile-header">
+    <div class="brand-title">
+      Observatorio INE
+      <span>Sistema de Diseño Móvil</span>
+    </div>
+    <button class="menu-trigger-btn" onclick="toggleDrawer()">
+      <span>☰</span> Secciones
+    </button>
+  </header>
+
+  <!-- ==========================================================================
+       02. PORTADA DE ENTRADA (LA INFOGRAFÍA EN CARRUSEL TÁCTIL)
+       ========================================================================== -->
+  <section class="mobile-landing" id="landing-cover">
+    
+    <span class="landing-badge">Atomic Design &bull; Nuestro Producto</span>
+    <h1 class="landing-hero-title">
+      Las piezas de nuestro producto, de la más pequeña a la página.
+    </h1>
+    <p class="landing-hero-desc">
+      Desliza con el dedo horizontalmente para explorar cada nivel &rarr;
+    </p>
+
+    <!-- Stepper / Píldoras rápidas -->
+    <div class="level-pills-bar" id="pillsBar">
+      <a href="#card-0" class="level-pill active" onclick="scrollToCard(0)">1. Átomos</a>
+      <a href="#card-1" class="level-pill" onclick="scrollToCard(1)">2. Moléculas</a>
+      <a href="#card-2" class="level-pill" onclick="scrollToCard(2)">3. Organismos</a>
+      <a href="#card-3" class="level-pill" onclick="scrollToCard(3)">4. Plantillas</a>
+      <a href="#card-4" class="level-pill" onclick="scrollToCard(4)">5. Páginas</a>
+    </div>
+
+    <!-- Carrusel de 5 Tarjetas (Swipe Nativo con Snap) -->
+    <div class="mobile-swipe-wrapper">
+      <div class="mobile-swipe-track" id="swipeTrack">
+
+        <!-- 1. ÁTOMOS -->
+        <div class="mobile-atomic-card" id="card-0">
+          <div>
+            <div class="card-top-header" style="background: var(--col-atomos);">
+              <h3>Átomos</h3>
+              <span>Los elementos básicos</span>
+            </div>
+
+            <span class="card-subheading">Colores de la UI</span>
+            <div class="swatches-row">
+              <div class="swatch-box" style="background:#49372B;"></div>
+              <div class="swatch-box" style="background:#825C43;"></div>
+              <div class="swatch-box" style="background:#F3DCBA;"></div>
+            </div>
+
+            <span class="card-subheading">Tipografía</span>
+            <div class="atom-number">11,2%</div>
+            <div class="atom-number-sub">Comparación con el período anterior</div>
+
+            <span class="card-subheading">Botón</span>
+            <button class="mobile-btn-demo">Continuar región</button>
+
+            <span class="card-subheading">Filtros & Íconos</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem;">
+              <span class="m-badge m-badge-neutral" style="padding: 0.35rem 0.65rem;">por: INE ▼</span>
+              <span style="font-size: 0.72rem; font-weight: 800;">ⓘ Ayuda / Ayuda</span>
+            </div>
+          </div>
+          <a href="#sec-atomos" class="link-more-mobile">Ver Átomos en detalle &rarr;</a>
+        </div>
+
+        <!-- 2. MOLÉCULAS -->
+        <div class="mobile-atomic-card" id="card-1">
+          <div>
+            <div class="card-top-header" style="background: var(--col-moleculas);">
+              <h3>Moléculas</h3>
+              <span>Elementos agrupados</span>
+            </div>
+
+            <span class="card-subheading">Tarjeta de dato</span>
+            <div class="white-sheet">
+              <div class="sheet-title">País</div>
+              <div class="sheet-kpi">11,2%</div>
+              <div class="sheet-delta">▲ 0,1 pp en el año</div>
+              <small style="color:var(--color-cafe-medio); font-size: 11px;">Fuente: INE, 2024</small>
+            </div>
+
+            <span class="card-subheading">Selector de región</span>
+            <div class="sheet-select">
+              <span>Todas</span>
+              <span>▼</span>
+            </div>
+
+            <span class="card-subheading">Rango de datos</span>
+            <div class="gradient-bar"></div>
+            <div style="display:flex; justify-content:space-between; font-size: 10px; font-weight: 700; color:var(--color-cafe-medio);">
+              <span>Min</span>
+              <span>Max</span>
+            </div>
+          </div>
+          <a href="#sec-moleculas" class="link-more-mobile">Ver Moléculas en detalle &rarr;</a>
+        </div>
+
+        <!-- 3. ORGANISMOS -->
+        <div class="mobile-atomic-card" id="card-2">
+          <div>
+            <div class="card-top-header" style="background: var(--col-organismos);">
+              <h3>Organismos</h3>
+              <span>Secciones completas</span>
+            </div>
+
+            <span class="card-subheading">Indicador principal</span>
+            <div class="white-sheet">
+              <div class="sheet-title">País</div>
+              <div class="sheet-kpi">11,2%</div>
+              <div class="bar-chart-track">
+                <div class="bar-chart-fill"></div>
+              </div>
+              <small style="color:var(--color-cafe-medio); font-size: 11px;">Fuente: INE</small>
+            </div>
+
+            <span class="card-subheading">Mapa de calor (Macrozonas)</span>
+            <div class="chile-heatmap-mobile">
+              <div class="chile-vertical-stack">
+                <div class="c-slice" style="width:14px; background:#E8C9B0;"></div>
+                <div class="c-slice" style="width:18px; background:#D8A684;"></div>
+                <div class="c-slice" style="width:22px; background:#BD7850;"></div>
+                <div class="c-slice" style="width:20px; background:#9A5A35;"></div>
+                <div class="c-slice" style="width:18px; background:#BD7850;"></div>
+                <div class="c-slice" style="width:20px; background:#BD7850;"></div>
+                <div class="c-slice" style="width:16px; background:#7D4424;"></div>
+                <div class="c-slice" style="width:19px; background:#BD7850;"></div>
+                <div class="c-slice" style="width:21px; background:#D8A684;"></div>
+                <div class="c-slice" style="width:18px; background:#BD7850;"></div>
+              </div>
+              <div style="font-size: 11px; font-weight: 700; color:var(--color-cafe-medio); line-height: 1.4;">
+                <div><span style="color:#D8A684;">■</span> 0% a 5%</div>
+                <div><span style="color:#BD7850;">■</span> 5% a 10%</div>
+                <div><span style="color:#7D4424;">■</span> 15%+</div>
+              </div>
+            </div>
+          </div>
+          <a href="#sec-organismos" class="link-more-mobile">Ver Organismos en detalle &rarr;</a>
+        </div>
+
+        <!-- 4. PLANTILLAS -->
+        <div class="mobile-atomic-card" id="card-3">
+          <div>
+            <div class="card-top-header" style="background: var(--col-plantillas);">
+              <h3>Plantillas</h3>
+              <span>Estructuras de contenido</span>
+            </div>
+
+            <div class="mini-phone-frame">
+              <div class="dashed-box">Gráfico</div>
+              <div class="dashed-box" style="padding: 0.65rem 0.1rem;">Texto o sección</div>
+              <div class="dashed-box" style="padding: 0.9rem 0.1rem;">Mapa</div>
+              <div class="dashed-box" style="border-color:var(--color-terracota); color:var(--color-terracota);">Botón de acción</div>
+            </div>
+
+            <p style="font-size: 0.72rem; color:var(--color-cafe-medio); text-align: center; line-height: 1.3;">
+              Diseño en vista responsive y de qué color, sin datos.
+            </p>
+          </div>
+          <a href="#sec-plantillas" class="link-more-mobile">Ver Plantillas en detalle &rarr;</a>
+        </div>
+
+        <!-- 5. PÁGINAS -->
+        <div class="mobile-atomic-card" id="card-4">
+          <div>
+            <div class="card-top-header" style="background: var(--col-paginas);">
+              <h3>Páginas</h3>
+              <span>Experiencias finalizadas</span>
+            </div>
+
+            <div class="mini-phone-frame" style="text-align: center;">
+              <span class="m-badge m-badge-neutral" style="font-size: 9px; padding: 2px 6px; width: 100%;">Comparación</span>
+              <span style="font-size: 9px; color:var(--color-cafe-medio); font-weight: 700;">Variación anual</span>
+              <div style="font-size: 1.25rem; font-weight: 900; line-height: 1;">11,2%</div>
+              <div style="font-size: 9px; color:var(--color-terracota); font-weight: 800;">▲ 0,1 pp en el año</div>
+              <div style="font-size: 8px; color:var(--color-cafe-medio); margin-top: 4px;">Fuente: INE, 2024</div>
+            </div>
+
+            <p style="font-size: 0.72rem; color:var(--color-cafe-medio); text-align: center; line-height: 1.3;">
+              Lector ve el efecto de los datos en su región con gráficos reales.
+            </p>
+          </div>
+          <a href="#sec-plantillas" class="link-more-mobile">Ver Páginas en detalle &rarr;</a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Puntos de Navegación del Carrusel -->
+    <div class="mobile-dots-indicator" id="dotsBar">
+      <div class="mobile-dot active"></div>
+      <div class="mobile-dot"></div>
+      <div class="mobile-dot"></div>
+      <div class="mobile-dot"></div>
+      <div class="mobile-dot"></div>
+    </div>
+
+    <!-- Frase Inferior -->
+    <div class="mobile-quote-banner">
+      Si cambias un átomo de color de acento, cambia en todas las moléculas, organismos y páginas. <em>Por eso un sistema es clave.</em>
+    </div>
+
+    <!-- Botón de Entrada Principal -->
+    <a href="#sec-producto" class="main-cta-mobile">
+      Explorar Presentación Completa (10 Secciones) &darr;
+    </a>
+
+  </section>
+
+
+  <!-- ==========================================================================
+       03. LAS 10 SECCIONES ADAPTADAS AL FORMATO TELÉFONO
+       ========================================================================== -->
+  <main class="mobile-content-area" id="presentacion-doc">
+
+    <!-- SECCIÓN 01: EL PRODUCTO -->
+    <section id="sec-producto" class="m-section">
+      <span class="m-sec-badge">Sección 01</span>
+      <h2 class="m-sec-title">El Producto: Observatorio INE</h2>
+      <p class="m-sec-lead">
+        Una plataforma para transformar los boletines del Instituto Nacional de Estadísticas en relatos sencillos y cercanos para la comunidad.
+      </p>
+
+      <div class="m-card-white">
+        <span class="m-badge m-badge-terracota" style="margin-bottom: 0.5rem;">Propósito Cívico</span>
+        <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin-bottom: 0.5rem;">Democratizar la estadística pública</h3>
+        <p style="font-size: 0.85rem; color: var(--color-cafe-medio); line-height: 1.5; margin-bottom: 0.75rem;">
+          Traduce la complejidad del desempleo, salarios e inflación en explicaciones pedagógicas que cualquier persona puede entender sin formación técnica.
+        </p>
+        <div class="m-card-beige">
+          <strong style="display:block; font-size: 0.85rem;">Cobertura 16 Regiones</strong>
+          <small style="color:var(--color-cafe-medio);">Comparación territorial al instante.</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 02: PRINCIPIOS -->
+    <section id="sec-principios" class="m-section">
+      <span class="m-sec-badge">Sección 02</span>
+      <h2 class="m-sec-title">Principios de Diseño</h2>
+      <p class="m-sec-lead">Directrices indispensables para la interfaz móvil.</p>
+
+      <div class="m-card-beige">
+        <strong style="font-size: 0.9rem;">1. Toda cifra tiene fuente</strong>
+        <p style="font-size: 0.82rem; color: var(--color-cafe-medio); margin-top: 2px;">Cita directa al boletín oficial y fecha de publicación.</p>
+      </div>
+      <div class="m-card-beige">
+        <strong style="font-size: 0.9rem;">2. Lenguaje sin tecnicismos</strong>
+        <p style="font-size: 0.82rem; color: var(--color-cafe-medio); margin-top: 2px;">Explicaciones llanas orientadas al ciudadano.</p>
+      </div>
+      <div class="m-card-beige">
+        <strong style="font-size: 0.9rem;">3. Perspectiva Territorial</strong>
+        <p style="font-size: 0.82rem; color: var(--color-cafe-medio); margin-top: 2px;">La región frente al estándar nacional.</p>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 03: TOKENS -->
+    <section id="sec-tokens" class="m-section">
+      <span class="m-sec-badge">Sección 03</span>
+      <h2 class="m-sec-title">Tokens de Diseño</h2>
+      <p class="m-sec-lead">Paleta sobria sin saturaciones estridentes.</p>
+
+      <div class="m-card-white">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div style="padding: 8px; background: #F7F4EE; border: 1px solid #ddd; border-radius: 6px; font-size: 11px; font-weight: 700;">
+            #F7F4EE<br><span style="color:var(--color-cafe-medio);">Crema</span>
+          </div>
+          <div style="padding: 8px; background: #E8DED0; border-radius: 6px; font-size: 11px; font-weight: 700;">
+            #E8DED0<br><span style="color:var(--color-cafe-medio);">Beige</span>
+          </div>
+          <div style="padding: 8px; background: #49372B; color: #fff; border-radius: 6px; font-size: 11px; font-weight: 700;">
+            #49372B<br><span>Café Oscuro</span>
+          </div>
+          <div style="padding: 8px; background: #A87559; color: #fff; border-radius: 6px; font-size: 11px; font-weight: 700;">
+            #A87559<br><span>Terracota</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 04: ÁTOMOS -->
+    <section id="sec-atomos" class="m-section">
+      <span class="m-sec-badge">Sección 04</span>
+      <h2 class="m-sec-title">Catálogo de Átomos</h2>
+      <p class="m-sec-lead">Componentes táctiles adaptados para pulsación digital.</p>
+
+      <div class="m-card-white">
+        <span class="card-subheading">Botones Táctiles</span>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button class="touch-btn touch-btn-primary">Botón Primario (44px)</button>
+          <button class="touch-btn touch-btn-accent">Botón Acento</button>
+          <button class="touch-btn touch-btn-secondary">Botón Secundario</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 05: MOLÉCULAS -->
+    <section id="sec-moleculas" class="m-section">
+      <span class="m-sec-badge">Sección 05</span>
+      <h2 class="m-sec-title">Moléculas Estadísticas</h2>
+      <p class="m-sec-lead">Unidades pedagógicas de lectura rápida.</p>
+
+      <div class="m-card-white">
+        <div style="display:flex; justify-content:space-between; align-items:baseline;">
+          <span class="card-subheading">Desocupación Regional</span>
+          <span class="m-badge m-badge-neutral">Dic-Feb</span>
+        </div>
+        <div style="font-family: var(--font-serif); font-size: 2.5rem; font-weight: 700; color: var(--color-cafe-oscuro); margin: 4px 0;">
+          8,1%
+        </div>
+        <div style="font-size: 0.82rem; font-weight: 800; color: var(--color-terracota);">
+          ▲ +0,1 pp comparado a 2024
+        </div>
+      </div>
+
+      <div class="m-explainer">
+        <strong>¿Qué significa?</strong><br>
+        En la región analizada, 8 de cada 100 personas de la fuerza de trabajo están buscando activamente empleo.
+      </div>
+    </section>
+
+    <!-- SECCIÓN 06: ORGANISMOS -->
+    <section id="sec-organismos" class="m-section">
+      <span class="m-sec-badge">Sección 06</span>
+      <h2 class="m-sec-title">Organismos</h2>
+      <p class="m-sec-lead">Tablas y módulos territoriales con scroll horizontal fluido.</p>
+
+      <div class="table-scroll-wrapper">
+        <div class="table-scroll-hint">&larr; Desliza la tabla para ver todo &rarr;</div>
+        <div class="table-responsive-box">
+          <table class="mobile-table">
+            <thead>
+              <tr>
+                <th>Indicador</th>
+                <th>Región</th>
+                <th>Nacional</th>
+                <th>Brecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Desempleo</strong></td>
+                <td>8,1%</td>
+                <td>8,5%</td>
+                <td style="color:var(--color-terracota); font-weight:800;">-0,4 pp</td>
+              </tr>
+              <tr>
+                <td><strong>Informalidad</strong></td>
+                <td>28,4%</td>
+                <td>27,1%</td>
+                <td style="font-weight:800;">+1,3 pp</td>
+              </tr>
+              <tr>
+                <td><strong>Ingreso Medio</strong></td>
+                <td>$745.000</td>
+                <td>$826.000</td>
+                <td>-$81.000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 07: PLANTILLAS Y PÁGINAS -->
+    <section id="sec-plantillas" class="m-section">
+      <span class="m-sec-badge">Sección 07</span>
+      <h2 class="m-sec-title">Plantillas & Páginas</h2>
+      <p class="m-sec-lead">Composición final del boletín en la pantalla de tu propio teléfono.</p>
+
+      <div class="m-card-white" style="border: 2px solid var(--color-cafe-suave);">
+        <span class="m-badge m-badge-ia" style="margin-bottom: 6px;">Boletín N° 312</span>
+        <h3 style="font-family: var(--font-serif); font-size: 1.4rem; color: var(--color-cafe-oscuro); margin-bottom: 4px;">
+          Región de Valparaíso
+        </h3>
+        <p style="font-size: 0.8rem; color: var(--color-cafe-medio); margin-bottom: 1rem;">Trimestre Móvil Oficial INE</p>
+
+        <div style="background: var(--color-crema); padding: 0.85rem; border-radius: var(--radius-md); margin-bottom: 0.75rem;">
+          <small style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--color-cafe-medio);">Tasa Desempleo</small>
+          <div style="font-family: var(--font-serif); font-size: 2.2rem; font-weight: 700;">8,1%</div>
+          <span style="font-size: 0.75rem; font-weight: 800; color: var(--color-terracota);">▲ 0,1 pp en el año</span>
+        </div>
+
+        <div class="m-explainer" style="margin-bottom: 0;">
+          Representa un escenario moderadamente más favorable que el promedio nacional (8,5%).
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 08: ESTADOS -->
+    <section id="sec-estados" class="m-section">
+      <span class="m-sec-badge">Sección 08</span>
+      <h2 class="m-sec-title">Matriz de Estados</h2>
+      <p class="m-sec-lead">Respuestas ante datos ausentes o problemas de red.</p>
+
+      <div class="m-card-white" style="border-style: dashed;">
+        <span style="font-size: 11px; font-weight: 800; color: var(--color-cafe-suave);">Sin Datos (n/d)</span>
+        <div style="font-family: var(--font-serif); font-size: 2rem; color: var(--color-cafe-suave); font-weight: 700;">N/D</div>
+        <p style="font-size: 0.75rem; color: var(--color-cafe-medio);">Muestra insuficiente para el corte comunal.</p>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 09: DATOS Y VOZ -->
+    <section id="sec-datos-voz" class="m-section">
+      <span class="m-sec-badge">Sección 09</span>
+      <h2 class="m-sec-title">Pautas de Voz y Datos</h2>
+      <p class="m-sec-lead">Reglas editoriales para el territorio chileno.</p>
+
+      <div class="m-card-white" style="font-size: 0.85rem; line-height: 1.5;">
+        <p style="margin-bottom: 8px;"><strong>Coma decimal:</strong> Siempre <code>8,1%</code> y nunca con punto anglosajón.</p>
+        <p style="margin-bottom: 8px;"><strong>Miles con punto:</strong> <code>$850.000</code> y <code>1.960.000 hab.</code></p>
+        <p><strong>Cercanía:</strong> Explicar el impacto antes que la fórmula matemática.</p>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 10: ACCESIBILIDAD E IA -->
+    <section id="sec-accesibilidad-ia" class="m-section">
+      <span class="m-sec-badge">Sección 10</span>
+      <h2 class="m-sec-title">Accesibilidad & IA</h2>
+      <p class="m-sec-lead">Compromiso ético con la transparencia.</p>
+
+      <div class="m-card-white">
+        <h4 style="font-family: var(--font-serif); margin-bottom: 6px;">Protocolo de IA Supervisada</h4>
+        <p style="font-size: 0.82rem; color: var(--color-cafe-medio); line-height: 1.5;">
+          Los modelos de inteligencia artificial solo asisten en redactar síntesis ciudadanas. Ningún porcentaje, cifra o cálculo matemático es generado por IA.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ==========================================================================
+       04. MENÚ DESLIZABLE (DRAWER INFERIOR)
+       ========================================================================== -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()">
+    <div class="mobile-drawer" onclick="event.stopPropagation()">
+      <div class="drawer-handle"></div>
+      <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin-bottom: 1rem; color: var(--color-cafe-oscuro);">
+        Secciones del Sistema
+      </h3>
+      <ul class="drawer-menu-list">
+        <li><a href="#landing-cover" onclick="toggleDrawer()"><span>&uarr;</span> Portada (Atomic Diagram)</a></li>
+        <li><a href="#sec-producto" onclick="toggleDrawer()"><span>01</span> El Producto</a></li>
+        <li><a href="#sec-principios" onclick="toggleDrawer()"><span>02</span> Principios</a></li>
+        <li><a href="#sec-tokens" onclick="toggleDrawer()"><span>03</span> Design Tokens</a></li>
+        <li><a href="#sec-atomos" onclick="toggleDrawer()"><span>04</span> Átomos</a></li>
+        <li><a href="#sec-moleculas" onclick="toggleDrawer()"><span>05</span> Moléculas</a></li>
+        <li><a href="#sec-organismos" onclick="toggleDrawer()"><span>06</span> Organismos</a></li>
+        <li><a href="#sec-plantillas" onclick="toggleDrawer()"><span>07</span> Plantillas y Páginas</a></li>
+        <li><a href="#sec-estados" onclick="toggleDrawer()"><span>08</span> Matriz de Estados</a></li>
+        <li><a href="#sec-datos-voz" onclick="toggleDrawer()"><span>09</span> Datos y Tono Editorial</a></li>
+        <li><a href="#sec-accesibilidad-ia" onclick="toggleDrawer()"><span>10</span> Accesibilidad e IA</a></li>
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- ==========================================================================
+       05. BARRA FLOTANTE FIJA PARA EL PULGAR
+       ========================================================================== -->
+  <nav class="mobile-bottom-bar">
+    <a href="#landing-cover">&uarr; Portada</a>
+    <span style="color: rgba(255,255,255,0.3);">|</span>
+    <a href="javascript:void(0)" onclick="toggleDrawer()">☰ 10 Secciones</a>
+  </nav>
+
+
+  <!-- ==========================================================================
+       LÓGICA JAVASCRIPT: CARRUSEL TÁCTIL Y DRAWER
+       ========================================================================== -->
+  <script>
+    // Control del Drawer (Menú inferior)
+    function toggleDrawer() {
+      const drawer = document.getElementById('drawerOverlay');
+      drawer.classList.toggle('active');
+    }
+
+    // Scroll sincronizado para el carrusel de tarjetas
+    const track = document.getElementById('swipeTrack');
+    const dots = document.querySelectorAll('.mobile-dot');
+    const pills = document.querySelectorAll('.level-pill');
+
+    function scrollToCard(index) {
+      const targetCard = document.getElementById('card-' + index);
+      if (targetCard) {
+        targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        updateActiveStates(index);
+      }
+    }
+
+    function updateActiveStates(index) {
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+      pills.forEach((pill, i) => pill.classList.toggle('active', i === index));
+    }
+
+    // Detectar el desplazamiento por gestos táctiles (Swipe)
+    track.addEventListener('scroll', () => {
+      const scrollPos = track.scrollLeft;
+      const cardWidth = track.firstElementChild.offsetWidth + 16; // width + gap
+      const activeIdx = Math.round(scrollPos / cardWidth);
+      if (activeIdx >= 0 && activeIdx < dots.length) {
+        updateActiveStates(activeIdx);
+      }
+    }, { passive: true });
+  </script>
+
+</body>
 <html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8">
