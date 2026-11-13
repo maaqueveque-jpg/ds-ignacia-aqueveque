@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Observatorio INE — Design System & Visualización Territorial</title>
+  <title>Observatorio INE — Design System & Cartografía SVG de Chile</title>
   
   <!-- Tipografías Oficiales -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,7 +12,7 @@
 
   <style>
     /* ==========================================================================
-       01. DESIGN TOKENS (LIGHT & DARK THEMES VIA CSS VARIABLES ONLY)
+       01. DESIGN TOKENS (LIGHT & DARK THEMES VIA CSS VARIABLES)
        ========================================================================== */
     :root {
       /* Paleta Oficial Sobria */
@@ -24,14 +24,14 @@
       --color-cafe-suave: #B09A82;
       --color-terracota: #A87559;
 
-      /* Escala estadística para mapas y gráficos (5 niveles de intensidad) */
+      /* Escala coroplética estadística (5 niveles de menor a mayor) */
       --scale-1: #F3E6D5;
       --scale-2: #DFC4AC;
       --scale-3: #BD9172;
       --scale-4: #9A6849;
       --scale-5: #65412A;
 
-      /* Tokens de interfaz */
+      /* Tokens de soporte */
       --col-card-bg: #F3EBE0;
       --color-border-soft: rgba(73, 55, 43, 0.12);
       --color-border-strong: rgba(73, 55, 43, 0.28);
@@ -62,7 +62,7 @@
       --transition: all 0.24s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* MODO OSCURO (CAMBIO EXCLUSIVO DE VARIABLES CSS) */
+    /* MODO OSCURO (CAMBIO EXCLUSIVO DE TOKENS CSS) */
     [data-theme="dark"] {
       --color-crema: #191411;
       --color-crema-card: #251D18;
@@ -177,7 +177,7 @@
     }
 
     /* ==========================================================================
-       03. LANDING PAGE ATOMIC DESIGN (CARRUSEL SWIPEABLE DE LA PORTADA)
+       03. LANDING PAGE ATOMIC DESIGN (CARRUSEL INICIAL)
        ========================================================================== */
     .landing-cover {
       padding: 1.5rem 1rem 2rem 1rem;
@@ -248,10 +248,7 @@
         overflow-x: visible;
         gap: 1rem;
       }
-      .atomic-card-col {
-        flex: auto;
-        max-width: none;
-      }
+      .atomic-card-col { flex: auto; max-width: none; }
     }
 
     .col-header-chip {
@@ -322,7 +319,7 @@
     }
 
     /* ==========================================================================
-       04. CONTENEDOR PRINCIPAL Y VISTA DUAL (MÓVIL / ESCRITORIO)
+       04. CONTENEDOR PRINCIPAL Y VISTA DUAL
        ========================================================================== */
     .stage-container {
       max-width: 1180px;
@@ -387,7 +384,6 @@
       margin-bottom: 1rem;
     }
 
-    /* Botones y Badges */
     .ine-btn {
       min-height: 44px;
       padding: 0.65rem 1.35rem;
@@ -433,7 +429,6 @@
       line-height: 1.5;
     }
 
-    /* Selector de Métricas Activas */
     .metric-filter-bar {
       display: flex;
       gap: 6px;
@@ -462,7 +457,7 @@
     }
 
     /* ==========================================================================
-       05. NUEVO ORGANISMO: MAPA INTERACTIVO DE CHILE (16 REGIONES)
+       05. NUEVO ORGANISMO: MAPA VECTORIAL GEOGRÁFICO DE CHILE (SVG REAL)
        ========================================================================== */
     .chile-map-organism-wrapper {
       display: grid;
@@ -485,47 +480,66 @@
       background: var(--color-crema);
       border: 1px solid var(--color-border-soft);
       border-radius: var(--radius-md);
-      padding: 1rem;
+      padding: 1rem 0.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
     }
 
+    /* Contenedor y lienzo SVG del mapa real */
     .chile-svg-canvas {
       width: 100%;
-      max-width: 290px;
-      height: 600px;
+      max-width: 320px;
+      height: 720px;
       filter: drop-shadow(0 4px 10px rgba(73, 55, 43, 0.08));
     }
 
-    /* Regiones interactivas vectoriales */
+    /* Trazo geográfico individual de cada región */
     .chile-region-geo {
       cursor: pointer;
-      stroke: var(--color-crema);
-      stroke-width: 1.5px;
-      transition: all 0.2s ease;
+      stroke: var(--color-crema-card);
+      stroke-width: 1.2px;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      transition: all 0.22s ease;
       outline: none;
     }
     .chile-region-geo:hover {
       stroke: var(--color-cafe-oscuro);
-      stroke-width: 2.5px;
+      stroke-width: 2.2px;
       filter: brightness(0.92);
     }
     .chile-region-geo.selected {
-      stroke: var(--color-terracota);
-      stroke-width: 3.5px;
-      filter: drop-shadow(0 0 6px var(--color-terracota));
+      stroke: var(--color-terracota) !important;
+      stroke-width: 3px !important;
+      filter: drop-shadow(0 0 6px rgba(168, 117, 89, 0.65));
     }
     .chile-region-geo:focus-visible {
       stroke: var(--color-terracota);
-      stroke-width: 3.5px;
+      stroke-width: 3px;
+    }
+
+    /* Inset territorial insular */
+    .map-inset-frame {
+      fill: var(--color-crema-card);
+      stroke: var(--color-cafe-suave);
+      stroke-width: 1;
+      stroke-dasharray: 3 3;
+      rx: 6;
+    }
+    .map-inset-title {
+      font-family: var(--font-sans);
+      font-size: 8.5px;
+      font-weight: 800;
+      fill: var(--color-cafe-medio);
+      letter-spacing: 0.5px;
     }
 
     .map-floating-tooltip {
       position: absolute;
       top: 14px;
-      left: 14px;
+      right: 14px;
       background: var(--color-cafe-oscuro);
       color: #FFFFFF;
       padding: 6px 12px;
@@ -540,7 +554,7 @@
     }
     .map-floating-tooltip.show { opacity: 1; }
 
-    /* Leyenda de Escala Estadística */
+    /* Leyenda coroplética */
     .map-choropleth-legend {
       width: 100%;
       margin-top: 1rem;
@@ -563,10 +577,7 @@
       gap: 3px;
       margin-bottom: 4px;
     }
-    .legend-step-color {
-      height: 12px;
-      border-radius: 2px;
-    }
+    .legend-step-color { height: 12px; border-radius: 2px; }
     .legend-labels-row {
       display: flex;
       justify-content: space-between;
@@ -575,7 +586,6 @@
       color: var(--color-cafe-medio);
     }
 
-    /* Ficha conectada al mapa */
     .map-detail-card {
       display: flex;
       flex-direction: column;
@@ -583,7 +593,7 @@
     }
 
     /* ==========================================================================
-       06. NUEVO ORGANISMO: SISTEMA DE GRÁFICOS ESTADÍSTICOS INTERACTIVOS
+       06. GRÁFICOS ESTADÍSTICOS INTERACTIVOS (BARRAS & LÍNEA)
        ========================================================================== */
     .charts-organism-wrapper {
       background: var(--color-crema-card);
@@ -622,7 +632,6 @@
       color: var(--color-cafe-oscuro);
     }
 
-    /* Gráfico 1: Barras Comparativas de las 16 Regiones */
     .bars-chart-container {
       display: flex;
       flex-direction: column;
@@ -642,9 +651,7 @@
       border-radius: 4px;
       transition: background 0.15s ease;
     }
-    .bar-chart-row:hover, .bar-chart-row.active {
-      background: var(--color-beige);
-    }
+    .bar-chart-row:hover, .bar-chart-row.active { background: var(--color-beige); }
     .bar-chart-row.active .bar-fill-seg {
       outline: 2px solid var(--color-terracota);
       outline-offset: 1px;
@@ -682,7 +689,6 @@
       color: var(--color-cafe-oscuro);
     }
 
-    /* Gráfico 2: Línea de Evolución Temporal (SVG Reactivo) */
     .line-chart-svg-box {
       width: 100%;
       background: var(--color-crema);
@@ -734,7 +740,6 @@
       fill: var(--color-cafe-oscuro);
     }
 
-    /* Gráfico 3: Comparativo Gauge / Barra Directa */
     .comparative-cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -742,19 +747,8 @@
     }
 
     /* ==========================================================================
-       07. MATRIZ DE ESTADOS Y TOAST
+       07. TOAST & DRAWER
        ========================================================================== */
-    .skeleton-line {
-      background: linear-gradient(90deg, var(--color-beige) 25%, var(--color-crema) 50%, var(--color-beige) 75%);
-      background-size: 200% 100%;
-      animation: skeleton-shimmer 1.5s infinite;
-      border-radius: var(--radius-sm);
-    }
-    @keyframes skeleton-shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
     .toast-pill {
       position: fixed;
       bottom: 24px;
@@ -774,10 +768,7 @@
       align-items: center;
       gap: 8px;
     }
-    .toast-pill.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
+    .toast-pill.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
     .drawer-overlay {
       position: fixed;
@@ -827,12 +818,12 @@
 <body>
 
   <!-- ==========================================================================
-       BARRA DE HERRAMIENTAS Y CONTROL GLOBAL
+       BARRA DE CONTROL GLOBAL
        ========================================================================== -->
   <header class="global-toolbar">
     <div class="brand-mark">
       <strong>Observatorio INE</strong>
-      <span>Visualización Territorial &bull; 16 Regiones</span>
+      <span>Mapa Geográfico SVG &bull; 16 Regiones</span>
     </div>
 
     <div class="toolbar-actions">
@@ -841,7 +832,7 @@
         📱 <span id="deviceToggleLabel">Vista Móvil</span>
       </button>
 
-      <!-- Alternador Modo Oscuro (Solo por tokens) -->
+      <!-- Alternador Modo Oscuro (Tokens CSS) -->
       <button class="toolbar-pill-btn" onclick="toggleDarkMode()" id="themeToggleBtn" title="Cambiar tema con tokens">
         🌓 <span id="themeToggleLabel">Oscuro</span>
       </button>
@@ -862,10 +853,9 @@
       Las piezas de nuestro producto, de la más pequeña a la página que ve el lector.
     </h1>
     <span class="landing-subbar">
-      Ahora con Mapa Interactivo de 16 Regiones y Módulo de Gráficos Estadísticos
+      Ahora con Mapa Geográfico Vectorial de Chile (16 Regiones) e Inset Insular
     </span>
 
-    <!-- Carrusel de 5 Columnas -->
     <div class="atomic-swipe-track">
 
       <!-- 1. ÁTOMOS -->
@@ -891,12 +881,6 @@
 
           <span class="col-sub">Botón</span>
           <button class="ine-btn ine-btn-accent" style="width: 100%; margin-bottom: 0.75rem;" onclick="copyTokenValue('class=&quot;ine-btn ine-btn-accent&quot;')">Continuar región</button>
-
-          <span class="col-sub">Filtros & Íconos</span>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="ine-badge ine-badge-neutral">por: INE ▼</span>
-            <span style="font-size: 11px; font-weight: 800;">ⓘ Ayuda / Ayuda</span>
-          </div>
         </div>
         <a href="#sec-04" class="ine-btn ine-btn-secondary" style="min-height: 36px; padding: 0.35rem 0.75rem; font-size: 0.72rem; margin-top: 1rem;">Ver Átomos &rarr;</a>
       </div>
@@ -937,12 +921,12 @@
             <span>Secciones completas</span>
           </div>
 
-          <span class="col-sub">Mapa & Gráficos</span>
+          <span class="col-sub">Mapa Geográfico Real</span>
           <div class="card-surface" style="padding: 0.75rem; margin-bottom: 0.75rem; text-align: center;">
-            <span class="ine-badge ine-badge-terracota" style="margin-bottom: 4px;">16 Regiones SVG</span>
-            <div style="font-size: 11px; font-weight: 800; color: var(--color-cafe-oscuro);">Mapa Coroplético + Barras + Línea Temporal</div>
+            <span class="ine-badge ine-badge-terracota" style="margin-bottom: 4px;">SVG Geográfico Exacto</span>
+            <div style="font-size: 11px; font-weight: 800; color: var(--color-cafe-oscuro);">16 Regiones + Insular Rapa Nui / Juan Fernández</div>
           </div>
-          <small style="font-size: 10px; color: var(--color-cafe-medio);">Componentes reactivos y sincronizados con la base estadística.</small>
+          <small style="font-size: 10px; color: var(--color-cafe-medio);">Trazados individuales con silueta y límites territoriales reales.</small>
         </div>
         <a href="#sec-06" class="ine-btn ine-btn-secondary" style="min-height: 36px; padding: 0.35rem 0.75rem; font-size: 0.72rem; margin-top: 1rem;">Ver Organismos &rarr;</a>
       </div>
@@ -957,8 +941,8 @@
 
           <div style="background: var(--color-crema-card); border: 2px dashed var(--color-cafe-suave); border-radius: 12px; padding: 0.6rem; text-align: center; font-size: 9px;">
             [ Cabecera & Selector ]<br>
-            [ Mapa de Chile | Gráficos ]<br>
-            [ Ficha Detallada & Glosario ]
+            [ Mapa de Chile SVG | Ficha ]<br>
+            [ Módulo de Gráficos Estadísticos ]
           </div>
           <small style="font-size: 10px; color: var(--color-cafe-medio); text-align: center; display: block; margin-top: 8px;">Distribución responsive de indicadores</small>
         </div>
@@ -1069,16 +1053,16 @@
     <!-- SECCIÓN 04: ÁTOMOS -->
     <section id="sec-04" class="section-block">
       <span class="sec-tag">Sección 04</span>
-      <h2 class="sec-title">Átomos Estadísticos & Visuales</h2>
-      <p class="sec-desc">Piezas indivisibles del mapa, gráficos y controles.</p>
+      <h2 class="sec-title">Átomos Cartográficos & Estadísticos</h2>
+      <p class="sec-desc">Piezas elementales del mapa vectorial SVG y controles.</p>
 
       <div class="card-surface">
-        <h4 style="font-size: 0.85rem; font-weight: 800; margin-bottom: 0.75rem;">Controles de Selección y Escala</h4>
+        <h4 style="font-size: 0.85rem; font-weight: 800; margin-bottom: 0.75rem;">Elementos Vectoriales y de Escala</h4>
         <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 1rem;">
-          <span class="ine-badge ine-badge-terracota">Átomo: Nodo SVG</span>
-          <span class="ine-badge ine-badge-neutral">Átomo: Barra de Gráfico</span>
+          <span class="ine-badge ine-badge-terracota">Átomo: Path Geográfico SVG</span>
+          <span class="ine-badge ine-badge-neutral">Átomo: Nodo Temporal</span>
           <span class="ine-badge ine-badge-ia">Átomo: Benchmark Nacional</span>
-          <button class="ine-btn ine-btn-primary" style="min-height: 38px; padding: 0.4rem 1rem;">Botón Filtrar</button>
+          <button class="ine-btn ine-btn-primary" style="min-height: 38px; padding: 0.4rem 1rem;">Botón Acción</button>
         </div>
       </div>
     </section>
@@ -1091,13 +1075,13 @@
 
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;">
         <div class="card-surface">
-          <span class="col-sub">Molécula: Tooltip Estadístico Flotante</span>
+          <span class="col-sub">Molécula: Tooltip Flotante de Mapa</span>
           <div style="display:inline-block; background: var(--color-cafe-oscuro); color: #fff; padding: 6px 12px; border-radius: var(--radius-pill); font-size: 0.75rem; font-weight: 800;">
             Región de Valparaíso: 8,1% (▲ +0,1 pp)
           </div>
         </div>
         <div class="card-surface">
-          <span class="col-sub">Molécula: Indicador de Brecha Territorial</span>
+          <span class="col-sub">Molécula: Comparador Territorial</span>
           <div style="font-size: 0.9rem; font-weight: 800; color: var(--color-terracota);">
             -0,4 pp respecto a la media nacional (8,5%)
           </div>
@@ -1105,18 +1089,18 @@
       </div>
     </section>
 
-    <!-- SECCIÓN 06: ORGANISMOS (MAPA INTERACTIVO + GRÁFICOS) -->
+    <!-- SECCIÓN 06: ORGANISMOS (MAPA GEOGRÁFICO REAL SVG + GRÁFICOS) -->
     <section id="sec-06" class="section-block">
-      <span class="sec-tag">Sección 06 &bull; Nuevos Organismos Centrales</span>
-      <h2 class="sec-title">Mapa Interactivo de Chile & Gráficos Estadísticos</h2>
+      <span class="sec-tag">Sección 06 &bull; Nuevo Organismo Cartográfico y Estadístico</span>
+      <h2 class="sec-title">Mapa Interactivo de Chile en Formato SVG & Gráficos</h2>
       <p class="sec-desc">
-        Explora las 16 regiones de Chile y su comportamiento en los indicadores oficiales del INE. Al cambiar de indicador o seleccionar una región, todos los componentes se actualizan de forma sincronizada.
+        Mapa geográfico fiel a la silueta y estrechez longitudinal de Chile, con sus <strong>16 regiones administrativas</strong> e inset insular oficial. Pasa el cursor para ver el nombre y haz clic para sincronizar la ficha regional y los gráficos.
       </p>
 
-      <!-- Selector Global de Indicador Estadístico -->
+      <!-- Selector de Indicador Estadístico -->
       <div style="margin-bottom: 1rem;">
         <label style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--color-cafe-medio); display: block; margin-bottom: 6px;">
-          Selecciona el Indicador a Visualizar:
+          Selecciona el Indicador a Visualizar en el Mapa:
         </label>
         <div class="metric-filter-bar">
           <button class="metric-tab-pill active" onclick="cambiarIndicador('desempleo', this)">
@@ -1131,50 +1115,112 @@
         </div>
       </div>
 
-      <!-- ORGANISMO 1: MAPA INTERACTIVO DE CHILE -->
+      <!-- ORGANISMO CARTOGRÁFICO: MAPA VECTORIAL DE CHILE -->
       <h3 style="font-family: var(--font-serif); font-size: 1.35rem; margin-bottom: 0.75rem;">
-        1. Organismo: Mapa Coroplético de Chile (16 Regiones)
+        1. Organismo: Mapa Geográfico Vectorial de Chile (16 Regiones)
       </h3>
 
       <div class="chile-map-organism-wrapper">
-        <!-- Lienzo del Mapa SVG -->
+        <!-- Viewport Cartográfico SVG -->
         <div class="map-interactive-viewport">
           <div class="map-floating-tooltip" id="mapTooltip">Pasa el cursor o pulsa una región</div>
 
-          <!-- Mapa Vectorial de Chile Completo (16 Regiones con coordenadas escalonadas) -->
-          <svg class="chile-svg-canvas" viewBox="0 0 240 680" role="img" aria-label="Mapa interactivo de las 16 regiones de Chile">
-            <!-- XV Arica y Parinacota -->
-            <path id="geo-arica" class="chile-region-geo" d="M110,20 L160,28 L145,55 L98,42 Z" data-key="arica" tabindex="0" role="button" aria-label="Arica y Parinacota"></path>
-            <!-- I Tarapacá -->
-            <path id="geo-tarapaca" class="chile-region-geo" d="M98,43 L145,56 L138,95 L90,85 Z" data-key="tarapaca" tabindex="0" role="button" aria-label="Tarapacá"></path>
-            <!-- II Antofagasta -->
-            <path id="geo-antofagasta" class="chile-region-geo" d="M90,86 L138,96 L142,150 L80,140 Z" data-key="antofagasta" tabindex="0" role="button" aria-label="Antofagasta"></path>
-            <!-- III Atacama -->
-            <path id="geo-atacama" class="chile-region-geo" d="M80,141 L142,151 L135,195 L72,185 Z" data-key="atacama" tabindex="0" role="button" aria-label="Atacama"></path>
-            <!-- IV Coquimbo -->
-            <path id="geo-coquimbo" class="chile-region-geo" d="M72,186 L135,196 L128,240 L68,232 Z" data-key="coquimbo" tabindex="0" role="button" aria-label="Coquimbo"></path>
-            <!-- V Valparaíso -->
-            <path id="geo-valparaiso" class="chile-region-geo" d="M68,233 L115,240 L110,270 L65,264 Z" data-key="valparaiso" tabindex="0" role="button" aria-label="Valparaíso"></path>
-            <!-- RM Metropolitana de Santiago -->
-            <path id="geo-metropolitana" class="chile-region-geo" d="M111,241 L126,242 L122,274 L107,272 Z" data-key="metropolitana" tabindex="0" role="button" aria-label="Región Metropolitana"></path>
-            <!-- VI O'Higgins -->
-            <path id="geo-ohiggins" class="chile-region-geo" d="M65,265 L121,273 L118,305 L62,298 Z" data-key="ohiggins" tabindex="0" role="button" aria-label="O'Higgins"></path>
-            <!-- VII Maule -->
-            <path id="geo-maule" class="chile-region-geo" d="M62,299 L118,306 L114,342 L58,335 Z" data-key="maule" tabindex="0" role="button" aria-label="Maule"></path>
-            <!-- XVI Ñuble -->
-            <path id="geo-nuble" class="chile-region-geo" d="M58,336 L114,343 L111,368 L56,362 Z" data-key="nuble" tabindex="0" role="button" aria-label="Ñuble"></path>
-            <!-- VIII Biobío -->
-            <path id="geo-biobio" class="chile-region-geo" d="M56,363 L111,369 L108,400 L54,394 Z" data-key="biobio" tabindex="0" role="button" aria-label="Biobío"></path>
-            <!-- IX La Araucanía -->
-            <path id="geo-araucania" class="chile-region-geo" d="M54,395 L108,401 L105,436 L52,430 Z" data-key="araucania" tabindex="0" role="button" aria-label="La Araucanía"></path>
-            <!-- XIV Los Ríos -->
-            <path id="geo-losrios" class="chile-region-geo" d="M52,431 L105,437 L102,465 L50,460 Z" data-key="losrios" tabindex="0" role="button" aria-label="Los Ríos"></path>
-            <!-- X Los Lagos -->
-            <path id="geo-loslagos" class="chile-region-geo" d="M50,461 L102,466 L98,515 L46,508 Z" data-key="loslagos" tabindex="0" role="button" aria-label="Los Lagos"></path>
-            <!-- XI Aysén -->
-            <path id="geo-aysen" class="chile-region-geo" d="M46,516 L98,516 L92,580 L42,572 Z" data-key="aysen" tabindex="0" role="button" aria-label="Aysén"></path>
-            <!-- XII Magallanes y Antártica -->
-            <path id="geo-magallanes" class="chile-region-geo" d="M42,573 L92,581 L95,655 L36,650 Z" data-key="magallanes" tabindex="0" role="button" aria-label="Magallanes"></path>
+          <!-- SVG VECTORIAL AUTÉNTICO: 16 REGIONES + INSET INSULAR -->
+          <svg class="chile-svg-canvas" viewBox="0 0 280 960" role="img" aria-label="Mapa geográfico vectorial de las 16 regiones de Chile">
+            <defs>
+              <filter id="shadowFilter" x="-10%" y="-10%" width="130%" height="130%">
+                <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(73,55,43,0.15)"/>
+              </filter>
+            </defs>
+
+            <!-- Recuadro Cartográfico: Territorio Insular (Rapa Nui y Juan Fernández) -->
+            <g id="territorio-insular-box">
+              <rect x="14" y="30" width="105" height="95" class="map-inset-frame" />
+              <text x="22" y="44" class="map-inset-title">TERRITORIO INSULAR</text>
+              <text x="22" y="54" style="font-size: 7.5px; fill: var(--color-cafe-medio); font-family: var(--font-sans);">Región de Valparaíso</text>
+
+              <!-- Isla de Pascua (Rapa Nui) -->
+              <path id="geo-rapanui" class="chile-region-geo" data-key="valparaiso" tabindex="0" role="button" aria-label="Rapa Nui (Valparaíso)"
+                    d="M 32,74 C 36,64 48,60 56,66 C 58,74 54,82 46,84 C 38,84 30,80 32,74 Z" />
+              <text x="34" y="93" style="font-size: 7px; font-weight:700; fill: var(--color-cafe-medio); font-family: var(--font-sans);">Rapa Nui</text>
+
+              <!-- Archipiélago Juan Fernández -->
+              <path id="geo-juanfernandez" class="chile-region-geo" data-key="valparaiso" tabindex="0" role="button" aria-label="Juan Fernández (Valparaíso)"
+                    d="M 80,82 C 84,78 90,80 92,86 C 88,90 82,92 78,88 Z M 98,92 C 101,90 104,92 103,95 C 100,97 97,95 98,92 Z" />
+              <text x="74" y="105" style="font-size: 7px; font-weight:700; fill: var(--color-cafe-medio); font-family: var(--font-sans);">J. Fernández</text>
+            </g>
+
+            <!-- =================================================================
+                 LAS 16 REGIONES ADMINISTRATIVAS DE CHILE (CONTINENTAL)
+                 ================================================================= -->
+            <g id="chile-continental-regions" filter="url(#shadowFilter)">
+              <!-- XV. Región de Arica y Parinacota -->
+              <path id="geo-arica" class="chile-region-geo" data-key="arica" tabindex="0" role="button" aria-label="Arica y Parinacota"
+                    d="M 152,24 C 158,23 170,21 184,20 C 192,26 195,36 192,48 C 188,54 186,60 182,64 C 168,63 158,62 144,61 C 146,50 148,38 152,24 Z" />
+
+              <!-- I. Región de Tarapacá -->
+              <path id="geo-tarapaca" class="chile-region-geo" data-key="tarapaca" tabindex="0" role="button" aria-label="Tarapacá"
+                    d="M 144,61 C 158,62 168,63 182,64 C 180,75 178,92 176,112 C 162,111 146,110 134,108 C 136,95 138,80 144,61 Z" />
+
+              <!-- II. Región de Antofagasta -->
+              <path id="geo-antofagasta" class="chile-region-geo" data-key="antofagasta" tabindex="0" role="button" aria-label="Antofagasta"
+                    d="M 134,108 C 146,110 162,111 176,112 C 178,135 182,165 184,205 C 165,204 145,202 120,200 C 122,185 125,168 120,158 C 114,152 110,146 112,138 C 115,134 122,142 124,146 C 126,132 128,120 134,108 Z" />
+
+              <!-- III. Región de Atacama -->
+              <path id="geo-atacama" class="chile-region-geo" data-key="atacama" tabindex="0" role="button" aria-label="Atacama"
+                    d="M 120,200 C 145,202 165,204 184,205 C 182,230 180,260 176,285 C 158,284 140,283 114,281 C 112,260 115,240 118,220 C 119,210 119,205 120,200 Z" />
+
+              <!-- IV. Región de Coquimbo -->
+              <path id="geo-coquimbo" class="chile-region-geo" data-key="coquimbo" tabindex="0" role="button" aria-label="Coquimbo"
+                    d="M 114,281 C 140,283 158,284 176,285 C 174,310 172,335 168,360 C 150,360 132,359 108,358 C 106,340 110,320 108,302 C 109,292 112,285 114,281 Z" />
+
+              <!-- V. Región de Valparaíso -->
+              <path id="geo-valparaiso" class="chile-region-geo" data-key="valparaiso" tabindex="0" role="button" aria-label="Valparaíso"
+                    d="M 108,358 C 132,359 150,360 168,360 C 166,375 165,392 162,408 C 150,404 140,400 134,402 C 128,406 124,416 126,424 C 122,428 116,432 114,435 C 108,434 104,432 102,430 C 100,410 104,390 106,375 C 107,366 107,361 108,358 Z" />
+
+              <!-- RM. Región Metropolitana de Santiago (Inland) -->
+              <path id="geo-metropolitana" class="chile-region-geo" data-key="metropolitana" tabindex="0" role="button" aria-label="Región Metropolitana de Santiago"
+                    d="M 134,402 C 140,400 150,404 162,408 C 160,422 158,436 156,448 C 144,446 132,442 124,436 C 122,428 126,424 124,416 C 128,406 132,402 134,402 Z" />
+
+              <!-- VI. Región del Libertador Gral. Bernardo O'Higgins -->
+              <path id="geo-ohiggins" class="chile-region-geo" data-key="ohiggins" tabindex="0" role="button" aria-label="Libertador Bernardo O'Higgins"
+                    d="M 102,430 C 104,432 108,434 114,435 C 122,428 124,436 132,442 C 144,446 156,448 C 154,462 152,476 150,488 C 134,486 118,485 96,482 C 98,465 100,445 102,430 Z" />
+
+              <!-- VII. Región del Maule -->
+              <path id="geo-maule" class="chile-region-geo" data-key="maule" tabindex="0" role="button" aria-label="Maule"
+                    d="M 96,482 C 118,485 134,486 150,488 C 148,506 146,524 144,538 C 126,536 110,534 92,530 C 90,515 92,498 96,482 Z" />
+
+              <!-- XVI. Región de Ñuble -->
+              <path id="geo-nuble" class="chile-region-geo" data-key="nuble" tabindex="0" role="button" aria-label="Ñuble"
+                    d="M 92,530 C 110,534 126,536 144,538 C 142,550 140,562 138,572 C 120,570 104,568 88,564 C 88,552 90,540 92,530 Z" />
+
+              <!-- VIII. Región del Biobío -->
+              <path id="geo-biobio" class="chile-region-geo" data-key="biobio" tabindex="0" role="button" aria-label="Biobío"
+                    d="M 88,564 C 104,568 120,570 138,572 C 136,588 134,604 132,618 C 114,616 98,614 80,610 C 76,598 74,586 80,580 C 84,575 86,570 88,564 Z" />
+
+              <!-- IX. Región de La Araucanía -->
+              <path id="geo-araucania" class="chile-region-geo" data-key="araucania" tabindex="0" role="button" aria-label="La Araucanía"
+                    d="M 80,610 C 98,614 114,616 132,618 C 130,634 128,650 126,664 C 110,662 94,660 76,656 C 74,640 76,625 80,610 Z" />
+
+              <!-- XIV. Región de Los Ríos -->
+              <path id="geo-losrios" class="chile-region-geo" data-key="losrios" tabindex="0" role="button" aria-label="Los Ríos"
+                    d="M 76,656 C 94,660 110,662 126,664 C 124,678 122,692 120,704 C 106,702 90,700 74,696 C 72,682 74,668 76,656 Z" />
+
+              <!-- X. Región de Los Lagos (Continental + Chiloé) -->
+              <path id="geo-loslagos" class="chile-region-geo" data-key="loslagos" tabindex="0" role="button" aria-label="Los Lagos"
+                    d="M 74,696 C 90,700 106,702 120,704 C 118,724 122,752 120,780 C 104,778 88,776 72,772 C 70,760 68,740 72,720 C 73,708 73,702 74,696 Z
+                       M 62,728 C 68,726 70,746 68,766 C 62,770 56,762 58,738 Z" />
+
+              <!-- XI. Región de Aysén del Gral. Carlos Ibáñez del Campo -->
+              <path id="geo-aysen" class="chile-region-geo" data-key="aysen" tabindex="0" role="button" aria-label="Aysén"
+                    d="M 72,772 C 88,776 104,778 120,780 C 118,806 116,832 112,860 C 96,858 80,856 64,852 C 58,842 54,825 60,810 C 66,802 62,786 72,772 Z
+                       M 52,790 C 56,792 54,812 48,816 C 46,804 48,792 52,790 Z" />
+
+              <!-- XII. Región de Magallanes y de la Antártica Chilena -->
+              <path id="geo-magallanes" class="chile-region-geo" data-key="magallanes" tabindex="0" role="button" aria-label="Magallanes y Antártica Chilena"
+                    d="M 64,852 C 80,856 96,858 112,860 C 122,870 144,876 156,888 C 168,902 182,912 178,935 C 160,942 142,945 130,940 C 118,944 98,946 88,938 C 76,928 66,915 62,892 C 58,876 60,862 64,852 Z
+                       M 136,915 C 162,912 176,928 165,944 C 148,948 132,932 136,915 Z" />
+            </g>
           </svg>
 
           <!-- Leyenda de Escala Estadística Coroplética -->
@@ -1234,7 +1280,7 @@
               </small>
             </div>
 
-            <!-- Síntesis en lenguaje claro -->
+            <!-- Explicación en lenguaje sencillo -->
             <div class="ine-explainer" id="detailExplainer" style="margin-bottom: 1rem;">
               En la Región de Valparaíso, 8 de cada 100 personas activas están buscando empleo. El sector turístico y logístico incidió favorablemente durante este trimestre.
             </div>
@@ -1270,12 +1316,10 @@
         <div id="chartViewBarras">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem; font-size: 0.75rem; color:var(--color-cafe-medio);">
             <span>Haz clic en cualquier barra para seleccionarla en el mapa</span>
-            <span>Línea punteada: Promedio Nacional (<strong id="barsNationalLabel">8,5%</strong>)</span>
+            <span>Línea de referencia: Promedio Nacional (<strong id="barsNationalLabel">8,5%</strong>)</span>
           </div>
 
-          <div class="bars-chart-container" id="barsChartContainer">
-            <!-- Renderizado dinámicamente desde JavaScript para las 16 regiones -->
-          </div>
+          <div class="bars-chart-container" id="barsChartContainer"></div>
         </div>
 
         <!-- Vista 2: Gráfico de Líneas de Evolución Temporal -->
@@ -1292,26 +1336,21 @@
 
           <div class="line-chart-svg-box">
             <svg class="line-chart-svg" viewBox="0 0 540 260" id="lineChartSvg" role="img" aria-label="Gráfico de evolución temporal del indicador">
-              <!-- Ejes de referencia -->
               <line x1="40" y1="30" x2="520" y2="30" class="axis-line"></line>
               <line x1="40" y1="90" x2="520" y2="90" class="axis-line"></line>
               <line x1="40" y1="150" x2="520" y2="150" class="axis-line"></line>
               <line x1="40" y1="210" x2="520" y2="210" class="axis-line"></line>
 
-              <!-- Etiquetas Y -->
               <text x="32" y="34" class="axis-text" text-anchor="end" id="yTickMax">12%</text>
               <text x="32" y="94" class="axis-text" text-anchor="end" id="yTickMidHigh">9%</text>
               <text x="32" y="154" class="axis-text" text-anchor="end" id="yTickMidLow">6%</text>
               <text x="32" y="214" class="axis-text" text-anchor="end" id="yTickMin">3%</text>
 
-              <!-- Líneas trazadas (actualizadas por JS) -->
               <path id="nationalLinePath" class="line-path-national" d=""></path>
               <path id="regionLinePath" class="line-path-region" d=""></path>
 
-              <!-- Puntos de datos interactivos -->
               <g id="lineDataNodesGroup"></g>
 
-              <!-- Etiquetas X -->
               <text x="70" y="240" class="axis-text" text-anchor="middle">Ene-Mar 24</text>
               <text x="160" y="240" class="axis-text" text-anchor="middle">Abr-Jun 24</text>
               <text x="250" y="240" class="axis-text" text-anchor="middle">Jul-Sep 24</text>
@@ -1359,7 +1398,6 @@
       <h2 class="sec-title">Plantillas, Páginas & Conexión Worker</h2>
       <p class="sec-desc">Integración del mapa y gráficos en la experiencia de página final.</p>
 
-      <!-- Caja de Conexión Worker -->
       <div class="card-surface" style="border: 1.5px solid var(--color-cafe-suave);">
         <span class="ine-badge ine-badge-ia" style="margin-bottom: 6px;">GET /regiones</span>
         <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
@@ -1445,7 +1483,7 @@
       <a href="#sec-03" class="drawer-pill-link" onclick="toggleDrawer()"><span>03. Tokens de Diseño</span> <span>Copia 1 Clic</span></a>
       <a href="#sec-04" class="drawer-pill-link" onclick="toggleDrawer()"><span>04. Átomos</span> <span>Escala</span></a>
       <a href="#sec-05" class="drawer-pill-link" onclick="toggleDrawer()"><span>05. Moléculas</span> <span>Tooltips</span></a>
-      <a href="#sec-06" class="drawer-pill-link" onclick="toggleDrawer()"><span>06. Mapa de Chile & Gráficos</span> <span>16 Regiones</span></a>
+      <a href="#sec-06" class="drawer-pill-link" onclick="toggleDrawer()"><span>06. Mapa SVG de Chile & Gráficos</span> <span>16 Regiones</span></a>
       <a href="#sec-07" class="drawer-pill-link" onclick="toggleDrawer()"><span>07. Plantillas & Worker</span> <span>Integración</span></a>
       <a href="#sec-08" class="drawer-pill-link" onclick="toggleDrawer()"><span>08. Matriz de Estados</span> <span>Resiliencia</span></a>
       <a href="#sec-09" class="drawer-pill-link" onclick="toggleDrawer()"><span>09. Componente Nuevo</span> <span>Escala</span></a>
@@ -1457,9 +1495,7 @@
        LÓGICA JAVASCRIPT: MAPA, GRÁFICOS, DATOS DE 16 REGIONES Y SINCRONIZACIÓN
        ========================================================================== -->
   <script>
-    /* ==========================================================================
-       1. BASE DE DATOS DEMOSTRATIVA OFICIAL (LAS 16 REGIONES DE CHILE)
-       ========================================================================== */
+    /* Base de Datos Oficial Demostrativa para las 16 Regiones */
     const data16Regiones = {
       'arica': {
         nombre: 'Arica y Parinacota', macrozona: 'Norte Grande', hab: '252.000 hab.',
@@ -1479,7 +1515,7 @@
         histI: [31.0, 31.5, 32.0, 32.4, 32.8, 33.1],
         histB: [-22.0, -21.6, -21.1, -20.9, -20.6, -20.4],
         desc: 'Influenciada por la minería de salitre/cobre y el comercio de Zona Franca (ZOFRI).',
-        lectura: 'La actividad comercial sostiene la ocupación pero con una de las mayores tasas de empleo por cuenta propia sin contrato.'
+        lectura: 'La actividad comercial sostiene la ocupación pero con alta tasa de empleo por cuenta propia sin contrato.'
       },
       'antofagasta': {
         nombre: 'Antofagasta', macrozona: 'Norte Grande', hab: '700.000 hab.',
@@ -1508,7 +1544,7 @@
         histD: [8.6, 8.8, 9.0, 9.1, 9.3, 9.5],
         histI: [28.8, 29.0, 29.2, 29.5, 29.6, 29.8],
         histB: [-22.5, -22.1, -21.8, -21.6, -21.4, -21.3],
-        desc: 'Fuerte componente turístico estacional y agricultura severamente afectada por sequía.',
+        desc: 'Fuerte componente turístico estacional y agricultura afectada por condiciones hídricas.',
         lectura: 'La menor disponibilidad hídrica redujo plazas agrícolas estacionales en los valles de Elqui y Limarí.'
       },
       'valparaiso': {
@@ -1549,7 +1585,7 @@
         histI: [31.2, 31.6, 31.9, 32.1, 32.3, 32.5],
         histB: [-23.1, -22.8, -22.5, -22.3, -22.1, -22.0],
         desc: 'Economía agroindustrial, viñedos, silvicultura y transporte rural de carga.',
-        lectura: 'Bajo desempleo formal relativo, compensado por alta dependencia del empleo agrícola temporal e informal.'
+        lectura: 'Bajo desempleo formal relativo, con alta proporción de empleo agrícola temporal e informal.'
       },
       'nuble': {
         nombre: 'Ñuble', macrozona: 'Zona Centro-Sur', hab: '515.000 hab.',
@@ -1558,7 +1594,7 @@
         histD: [8.1, 8.3, 8.5, 8.6, 8.8, 8.9],
         histI: [32.5, 33.0, 33.5, 33.9, 34.2, 34.6],
         histB: [-25.5, -25.2, -24.9, -24.8, -24.6, -24.5],
-        desc: 'Región de creación reciente; predominio de agricultura familiar campesina y servicios en Chillán.',
+        desc: 'Predominio de agricultura familiar campesina y servicios en Chillán.',
         lectura: 'Registra la tasa de ocupación informal más alta del país: más de un tercio labora sin contrato regulado.'
       },
       'biobio': {
@@ -1568,7 +1604,7 @@
         histD: [8.9, 8.8, 8.6, 8.5, 8.5, 8.4],
         histI: [28.2, 28.0, 27.9, 27.8, 27.8, 27.8],
         histB: [-24.8, -24.4, -24.0, -23.7, -23.5, -23.2],
-        desc: 'Polo fabril, acerero, papelero/forestal y de pesca industrial con salida por puertos de Talcahuano.',
+        desc: 'Polo fabril, papelero/forestal y de pesca industrial con salida por puertos de Talcahuano.',
         lectura: 'El empleo manufacturero resiste con leve expansión tras la reconversión de industrias locales.'
       },
       'araucania': {
@@ -1623,7 +1659,6 @@
       }
     };
 
-    // Parámetros y Benchmarks Nacionales INE
     const nationalBenchmarks = {
       desempleo: { valor: 8.5, unidad: '%', delta: '▲ +0,1 pp', label: 'Tasa de Desocupación', hist: [8.5, 8.5, 8.6, 8.5, 8.4, 8.5] },
       informalidad: { valor: 27.1, unidad: '%', delta: '▲ +0,2 pp', label: 'Ocupación Informal', hist: [27.0, 27.1, 27.3, 27.2, 27.1, 27.1] },
@@ -1633,9 +1668,6 @@
     let activeMetric = 'desempleo';
     let activeRegionKey = 'valparaiso';
 
-    /* ==========================================================================
-       2. LÓGICA DE ESCALAS Y COROPLETAS (COLOR ATÓMICO)
-       ========================================================================== */
     function getColorForValue(val, metric) {
       if (metric === 'desempleo') {
         if (val < 6.0) return 'var(--scale-1)';
@@ -1649,7 +1681,7 @@
         if (val < 29.5) return 'var(--scale-3)';
         if (val < 33.0) return 'var(--scale-4)';
         return 'var(--scale-5)';
-      } else { // Brecha (mientras más negativa, mayor brecha)
+      } else {
         const abs = Math.abs(val);
         if (abs < 17.0) return 'var(--scale-1)';
         if (abs < 21.0) return 'var(--scale-2)';
@@ -1659,18 +1691,17 @@
       }
     }
 
-    /* ==========================================================================
-       3. ACTUALIZACIÓN DEL MAPA INTERACTIVO Y FICHAS
-       ========================================================================== */
     function renderMapChoropleth() {
       Object.keys(data16Regiones).forEach(key => {
-        const path = document.getElementById('geo-' + key);
-        if (path) {
-          const val = data16Regiones[key][activeMetric];
-          path.style.fill = getColorForValue(val, activeMetric);
+        const val = data16Regiones[key][activeMetric];
+        const color = getColorForValue(val, activeMetric);
+
+        // Actualizar paths continentales e insulares
+        document.querySelectorAll(`.chile-region-geo[data-key="${key}"]`).forEach(path => {
+          path.style.fill = color;
           path.classList.toggle('selected', key === activeRegionKey);
           path.setAttribute('aria-label', `${data16Regiones[key].nombre}: ${val}%`);
-        }
+        });
       });
       actualizarLeyenda();
     }
@@ -1694,16 +1725,13 @@
       if (!data16Regiones[key]) return;
       activeRegionKey = key;
 
-      // Resaltar en SVG
       document.querySelectorAll('.chile-region-geo').forEach(p => p.classList.remove('selected'));
-      const activePath = document.getElementById('geo-' + key);
-      if (activePath) activePath.classList.add('selected');
+      document.querySelectorAll(`.chile-region-geo[data-key="${key}"]`).forEach(p => p.classList.add('selected'));
 
       const data = data16Regiones[key];
       const nat = nationalBenchmarks[activeMetric];
       const val = data[activeMetric];
 
-      // Actualizar Ficha Conectada del Mapa
       document.getElementById('detailRegionName').innerText = 'Región de ' + data.nombre;
       document.getElementById('detailMacrozone').innerText = data.macrozona;
       document.getElementById('detailHabitantes').innerText = data.hab;
@@ -1713,7 +1741,6 @@
       const deltaProp = activeMetric === 'desempleo' ? 'deltaD' : activeMetric === 'informalidad' ? 'deltaI' : 'deltaB';
       document.getElementById('detailMetricDelta').innerText = data[deltaProp] + ' en 12 meses';
 
-      // Comparación y Barra
       document.getElementById('detailCompReg').innerText = val + nat.unidad;
       document.getElementById('detailCompNat').innerText = nat.valor + nat.unidad;
       
@@ -1726,7 +1753,6 @@
       document.getElementById('detailCompBar').style.width = pctBar + '%';
       document.getElementById('detailExplainer').innerHTML = `<strong>Lectura ciudadana:</strong> ${data.lectura}`;
 
-      // Actualizar Gráficos sincronizados
       renderBarsChart();
       renderLineChart();
       renderComparativeGauge();
@@ -1734,21 +1760,16 @@
       showToast(`Región seleccionada: ${data.nombre}`);
     }
 
-    /* ==========================================================================
-       4. LÓGICA DE GRÁFICOS INTERACTIVOS (BARRAS, LÍNEA TEMPORAL Y COMPARADOR)
-       ========================================================================== */
     function renderBarsChart() {
       const container = document.getElementById('barsChartContainer');
       container.innerHTML = '';
       const nat = nationalBenchmarks[activeMetric];
       document.getElementById('barsNationalLabel').innerText = nat.valor + nat.unidad;
 
-      // Ordenar regiones por valor del indicador
       const sortedKeys = Object.keys(data16Regiones).sort((a, b) => {
         return data16Regiones[b][activeMetric] - data16Regiones[a][activeMetric];
       });
 
-      // Calcular ancho de referencia (máximo para porcentaje)
       const maxVal = Math.max(...sortedKeys.map(k => Math.abs(data16Regiones[k][activeMetric])), Math.abs(nat.valor)) * 1.15;
       const benchmarkPos = (Math.abs(nat.valor) / maxVal) * 100;
 
@@ -1780,11 +1801,8 @@
 
       const regHist = activeMetric === 'desempleo' ? data.histD : activeMetric === 'informalidad' ? data.histI : data.histB;
       const natHist = nat.hist;
-
-      // Coordenadas X fijas para los 6 trimestres
       const xCoords = [70, 160, 250, 340, 430, 500];
 
-      // Determinar escala Y
       const allVals = [...regHist, ...natHist];
       const minV = Math.min(...allVals) - 1.5;
       const maxV = Math.max(...allVals) + 1.5;
@@ -1794,26 +1812,20 @@
       document.getElementById('yTickMidLow').textContent = ((maxV + minV * 2) / 3).toFixed(0) + nat.unidad;
       document.getElementById('yTickMin').textContent = (minV).toFixed(0) + nat.unidad;
 
-      const calcY = (val) => {
-        const pct = (val - minV) / (maxV - minV);
-        return 210 - (pct * 180); // Rango de 210 a 30
-      };
+      const calcY = (val) => 210 - (((val - minV) / (maxV - minV)) * 180);
 
-      // Trazar ruta región
       let dReg = `M ${xCoords[0]},${calcY(regHist[0])}`;
       for (let i = 1; i < xCoords.length; i++) {
         dReg += ` L ${xCoords[i]},${calcY(regHist[i])}`;
       }
       document.getElementById('regionLinePath').setAttribute('d', dReg);
 
-      // Trazar ruta nacional
       let dNat = `M ${xCoords[0]},${calcY(natHist[0])}`;
       for (let i = 1; i < xCoords.length; i++) {
         dNat += ` L ${xCoords[i]},${calcY(natHist[i])}`;
       }
       document.getElementById('nationalLinePath').setAttribute('d', dNat);
 
-      // Nodos interactivos de datos
       const nodesGroup = document.getElementById('lineDataNodesGroup');
       nodesGroup.innerHTML = '';
       xCoords.forEach((x, idx) => {
@@ -1823,9 +1835,7 @@
         circle.setAttribute('cy', y);
         circle.setAttribute('r', 5);
         circle.setAttribute('class', 'chart-data-node');
-        circle.onmouseenter = (e) => {
-          showToast(`Trimestre ${idx + 1}: ${regHist[idx]}${nat.unidad} (${data.nombre})`);
-        };
+        circle.onmouseenter = () => showToast(`Trimestre ${idx + 1}: ${regHist[idx]}${nat.unidad} (${data.nombre})`);
         nodesGroup.appendChild(circle);
       });
     }
@@ -1861,16 +1871,13 @@
       document.getElementById('chartViewComparativo').style.display = vista === 'comparativo' ? 'block' : 'none';
     }
 
-    /* ==========================================================================
-       5. EVENTOS DEL MAPA SVG (HOVER, CLICK, KEYBOARD)
-       ========================================================================== */
     function initMapEvents() {
       const tooltip = document.getElementById('mapTooltip');
 
       document.querySelectorAll('.chile-region-geo').forEach(path => {
         const key = path.getAttribute('data-key');
 
-        path.addEventListener('mouseenter', (e) => {
+        path.addEventListener('mouseenter', () => {
           const reg = data16Regiones[key];
           if (!reg) return;
           tooltip.innerText = `${reg.nombre}: ${reg[activeMetric]}%`;
@@ -1894,9 +1901,6 @@
       });
     }
 
-    /* ==========================================================================
-       6. CONMUTADORES GLOBALES: DARK MODE, ANCHO 390PX, COPIAR TOKENS, DRAWER
-       ========================================================================== */
     function toggleDarkMode() {
       const html = document.documentElement;
       const isDark = html.getAttribute('data-theme') === 'dark';
@@ -1994,9 +1998,6 @@
       }
     }
 
-    /* ==========================================================================
-       INICIALIZACIÓN AL CARGAR LA PÁGINA
-       ========================================================================== */
     window.addEventListener('DOMContentLoaded', () => {
       initMapEvents();
       renderMapChoropleth();
